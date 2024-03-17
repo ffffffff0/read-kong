@@ -104,7 +104,7 @@ jobs:
           $TEST_CMD
 
     - name: Archive coverage stats file
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: ${{ always() && (inputs.coverage == true || github.event_name == 'schedule') }}
       with:
         name: luacov-stats-out-${{ github.job }}-${{ github.run_id }}
@@ -236,7 +236,7 @@ jobs:
           .ci/run_tests.sh
 
     - name: Archive coverage stats file
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: ${{ always() && (inputs.coverage == true || github.event_name == 'schedule') }}
       with:
         name: luacov-stats-out-${{ github.job }}-${{ github.run_id }}-${{ matrix.suite }}-${{ contains(matrix.split, 'first') && '1' || '2' }}
@@ -304,7 +304,7 @@ jobs:
           .ci/run_tests.sh
 
     - name: Archive coverage stats file
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: ${{ always() && (inputs.coverage == true || github.event_name == 'schedule') }}
       with:
         name: luacov-stats-out-${{ github.job }}-${{ github.run_id }}
@@ -351,7 +351,7 @@ jobs:
           .ci/run_tests.sh
 
     - name: Archive coverage stats file
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: ${{ always() && (inputs.coverage == true || github.event_name == 'schedule') }}
       with:
         name: luacov-stats-out-${{ github.job }}-${{ github.run_id }}
