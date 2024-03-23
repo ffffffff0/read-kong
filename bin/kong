@@ -60,7 +60,17 @@ The available commands are:
 Options:
 %s]], table.concat(cmds_arr, "\n "), options)
 
+-- arg是Lua的一个预定义全局变量，它是一个表，包含了传递给脚本的命令行参数。
+-- arg[0]是脚本本身的名字，arg[1]是第一个参数，arg[2]是第二个参数，以此类推。
+-- lua myscript.lua arg1 arg2 arg3，那么在调用table.remove(arg, 1)之后，
+-- arg表就变成了：arg[0]="myscript.lua", arg[1]="arg2", arg[2]="arg3"，
+-- 第一个参数"arg1"被移除了。
+
+-- 例如从 docker 中触发, kong docker-start --nginx-config custom_nginx.template
+-- 会经过 entrpoint.sh 链接到此处, 也即是:
+-- kong prepare -p /usr/local/kong docker-start --nginx-conf custom_nginx.template
 local cmd_name = table.remove(arg, 1)
+-- table remove 返回移除的值
 if not cmd_name then
   pl_app(help)
   pl_app.quit()
@@ -74,6 +84,7 @@ local cmd_lapp = cmd.lapp
 
 if cmd_lapp then
   cmd_lapp = cmd_lapp .. options -- append universal options
+  -- 解析参数, arg = { -p = /usr/local/kong, --nginx-conf = custom_nginx.template }
   arg = pl_app(cmd_lapp)
 end
 
@@ -116,6 +127,7 @@ if not skip_inject_cmds[cmd_name] then
 end
 
 -- construct the args table
+-- kong -p /usr/local/kong docker-start --nginx-conf custom_nginx.template
 local args_table = { "{" }
 for k, v in pairs(arg) do
   if type(k) == "string" then
@@ -128,6 +140,10 @@ for k, v in pairs(arg) do
   table.insert(args_table, string.format("[%s] = %s,", k, v))
 end
 table.insert(args_table, "}")
+-- { "{", 
+--   [-p] = "/usr/local/kong", 
+--   [--nginx-conf] = "custom_nginx.template"
+--   "}" }
 
 local args_str = table.concat(args_table, " ")
 

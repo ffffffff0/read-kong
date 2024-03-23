@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# set -Eeo pipefail会让你的脚本在任何命令出错时立即退出，
+# 无论这个命令是单独的命令，还是管道中的一部分。这样可以让你的脚本更健壮，
+# 因为它不会忽略任何错误。
 set -Eeo pipefail
 
 # usage: file_env VAR [DEFAULT]
@@ -42,6 +45,7 @@ if [[ "$1" == "kong" ]]; then
   PREFIX=${KONG_PREFIX:=/usr/local/kong}
 
   if [[ "$2" == "docker-start" ]]; then
+  # 链接到 /bin/kong 下,开始执行相关命令
     kong prepare -p "$PREFIX" "$@"
 
     # remove all dangling sockets in $PREFIX dir before starting Kong
