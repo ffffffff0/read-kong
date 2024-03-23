@@ -24,10 +24,13 @@ error_template_xml = NONE
 error_template_plain = NONE
 node_id = NONE
 
+# proxy_listen 在 conf_loader 转为 proxy_listenes, proxy_listenes 会在 nginx.conf 来 import nginx_kong.conf
 proxy_listen = 0.0.0.0:8000 reuseport backlog=16384, 0.0.0.0:8443 http2 ssl reuseport backlog=16384
 stream_listen = off
+# 同 proxy_listen
 admin_listen = 127.0.0.1:8001 reuseport backlog=16384, 127.0.0.1:8444 http2 ssl reuseport backlog=16384
 admin_gui_listen = 0.0.0.0:8002, 0.0.0.0:8445 ssl
+# 同 proxy_listen
 status_listen = off
 cluster_listen = 0.0.0.0:8005
 cluster_control_plane = 127.0.0.1:8005

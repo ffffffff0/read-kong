@@ -68,6 +68,8 @@ if [[ "$1" == "kong" ]]; then
     ln -sfn /dev/stdout $PREFIX/logs/admin_access.log
     ln -sfn /dev/stderr $PREFIX/logs/error.log
 
+    # 启动 Nginx 服务器，以 /usr/local/kong/nginx.conf 的配置，这里是 kong/templates/nginx.lua 为样本, 
+    # 在 prefix_handler 中 prepare_prefix 设置
     exec /usr/local/openresty/nginx/sbin/nginx \
       -p "$PREFIX" \
       -c nginx.conf

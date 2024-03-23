@@ -290,7 +290,7 @@ local function compile_conf(kong_config, conf_template)
       end
     end
   end
-
+  -- 深度合并两个 table, 第一个参数为 目标表，其他为源表，合并策略是以源表为准
   compile_env = pl_tablex.merge(compile_env, kong_config, true) -- union
   compile_env.dns_resolver = table.concat(compile_env.dns_resolver or {}, " ")
   compile_env.lua_package_path = (compile_env.lua_package_path or "") .. ";" ..
@@ -298,6 +298,11 @@ local function compile_conf(kong_config, conf_template)
   compile_env.lua_package_cpath = (compile_env.lua_package_cpath or "") .. ";" ..
                                   (os.getenv("LUA_CPATH") or "")
 
+  -- pl.template.substitute() 函数的基本用法如下：
+  -- local result = pl.template.substitute(pattern, subs, ...)
+  -- pattern：这是包含占位符的模板字符串。占位符通常以 % 开头，后面跟着一个标识符，例如 %name。
+  -- subs：这是一个表，其中的键对应模板中的占位符，值是要替换占位符的字符串。
+  -- ...：这些是额外的参数，如果模板中有剩余的占位符，它们将按顺序替换这些占位符。
   local post_template, err = pl_template.substitute(conf_template, compile_env)
   if not post_template then
     return nil, "failed to compile nginx config template: " .. err

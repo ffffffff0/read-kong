@@ -157,6 +157,16 @@ package.path = (os.getenv("KONG_LUA_PATH_OVERRIDE") or "") .. "./?.lua;./?/init.
 require("kong.cmd.init")("%s", %s)
 ]], cmd_name, args_str)
 
+-- resty：调用 OpenResty 命令行接口的命令, resty 工具允许直接在命令行中运行 Lua 代码。
+-- --main-conf "%s"：这个选项用于指定 OpenResty 启动时加载的主配置文件（通常是一个 Nginx 配置文件）。%s 是一个占位符，它将被实际的主配置文件路径所替换。
+-- --http-conf "%s"：这个选项用于指定 OpenResty 启动时加载的 HTTP 配置文件。这通常是一个包含 HTTP 相关配置的 Nginx 配置文件，
+-- 如服务器块、位置块、日志格式等。同样，%s 是一个占位符，用于替换为实际的 HTTP 配置文件路径。
+
+-- --stream-conf "%s"：这个选项用于指定 OpenResty 启动时加载的 Stream 配置文件。Stream 配置文件用于定义 Nginx 的 Stream 模块配置，
+-- 这通常涉及到对网络流量的路由和处理。这里的 %s 也是一个占位符，用于替换为实际的 Stream 配置文件路径。
+
+-- -e '%s'：这个选项允许你内联执行一段 Lua 代码。这在你想要在启动 OpenResty 时立即执行一些 Lua 脚本来修改配置或者执行其他初始化任务时非常有用。
+-- %s 同样是一个占位符，用于替换为实际的 Lua 代码字符串。
 local resty_cmd = string.format(
   "resty --main-conf \"%s\" --http-conf \"%s\" --stream-conf \"%s\" -e '%s'",
   main_conf, http_conf, stream_conf, inline_code)
