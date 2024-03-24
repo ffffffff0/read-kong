@@ -1374,6 +1374,7 @@ local function check_and_parse(conf, opts)
 end
 
 
+-- 
 local function overrides(k, default_v, opts, file_conf, arg_conf)
   opts = opts or {}
 
@@ -1722,6 +1723,11 @@ local function load(path, custom_conf, opts)
   end
 
   -- merge file conf, ENV variables, and arg conf (with precedence)
+  -- pl.tablex.pairmap 接受可选的函数参数，允许每次迭代指定一个回调函数，这个回调函数将会接收到每次迭代的键和值作为参数。
+  -- pl.tablex.pairmap 函数接受以下参数：
+  -- 1.func：这是一个函数，它将被应用于表中的每个键值对。这个函数应该接受两个参数：键（key）和值（value）。
+  -- 2.table：这是要遍历的 Lua 表。
+  -- 3....：这是可变参数列表，可以用来传递额外的参数给 func 函数。这些参数会在调用 func 时，紧随键值对之后传递给它
   local user_conf = tablex.pairmap(overrides, defaults,
                                    tablex.union(opts, { no_defaults = true, }),
                                    from_file_conf, custom_conf)

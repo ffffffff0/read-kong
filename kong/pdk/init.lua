@@ -249,6 +249,9 @@ function _PDK.new(kong_config, self)
   })
 
   for _, module_name in ipairs(MAJOR_MODULES) do
+  -- 在 Lua 中，表（table）是引用传递的。这意味着当一个表赋值给另一个变量时，
+  -- 两个变量实际上都指向同一个 Lua 表对象。在这个代码段中，self 被赋值给 parent，
+  -- 所以 parent 变量现在引用了与 self 相同的表。当通过 parent 来增加或修改内容时，实际上是在修改 self 引用的同一个表。
     local parent = self
     for part in module_name:gmatch("([^.]+)%.") do
       if not parent[part] then
@@ -257,6 +260,10 @@ function _PDK.new(kong_config, self)
 
       parent = parent[part]
     end
+    -- 因为 Lua 中的变量并不直接存储值，而是存储对值的引用。
+    -- 所以，当执行 parent[part] = {} 时，实际上是在 self 指向的表中创建了一个新的键 part，
+    -- 其值为一个空表。之后，当更新 parent = parent[part] 时，
+    -- 实际上是将 parent 变量的引用指向了 self 表中的 part 键所对应的新表。
 
     local child = module_name:match("[^.]*$")
     if parent[child] then
@@ -266,6 +273,9 @@ function _PDK.new(kong_config, self)
     local mod = require("kong.pdk." .. module_name)
 
     parent[child] = mod.new(self)
+    -- 虽然 parent 在循环中被修改了，但 self 本身并没有被改变。
+    -- 只有 self 对象的属性（也就是模块）被添加或修改了。
+    -- self 可以在循环结束后仍然保持其原始值的原因。这种方法可以在不改变原始对象的情况下修改其属性
   end
 
   self._log = self.log

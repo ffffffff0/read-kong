@@ -162,6 +162,7 @@ function _GLOBAL.init_pdk(self, kong_config)
     error("arg #1 cannot be nil", 2)
   end
 
+  -- 在 /usr/local/kong/kong.id 中写入一个唯一的 uuid
   private_node.init_node_id(kong_config)
 
   PDK.new(kong_config, self)

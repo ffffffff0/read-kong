@@ -570,10 +570,16 @@ function Kong.init()
           "global named 'kong' (please use 'Kong' instead)")
   end
 
+  -- ngx.config 是一个 Lua 表，它包含了当前 Nginx 配置的相关信息。
+  -- ngx.config 表通常用于两种类型的配置数据：
+  -- 指令值：这些是从 Nginx 配置文件中直接读取的值，并且在运行时不会改变。
+  -- 动态配置：OpenResty 允许在不重启 Nginx 的情况下动态地修改某些配置参数。这些参数通过 set_by_lua, set_by_lua_file, 
+  -- map, map_file 等 Lua 指令在运行时设置。ngx.config 表可以用来访问这些动态配置的当前值。
   -- retrieve kong_config
   local conf_path = pl_path.join(ngx.config.prefix(), ".kong_env")
   local config = assert(conf_loader(conf_path, nil, { from_kong_env = true }))
 
+  -- 设置 ngx.shared.kong 元表
   reset_kong_shm(config)
 
   -- special math.randomseed from kong.globalpatches not taking any argument.
@@ -581,6 +587,7 @@ function Kong.init()
   -- duplicated seeds.
   math.randomseed()
 
+  -- 将 pdk 下的主要模块加载到 kong 中
   kong_global.init_pdk(kong, config)
   instrumentation.init(config)
   wasm.init(config)
