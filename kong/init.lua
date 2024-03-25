@@ -589,6 +589,7 @@ function Kong.init()
 
   -- 将 pdk 下的主要模块加载到 kong 中
   kong_global.init_pdk(kong, config)
+  -- 初始化 instrumentation
   instrumentation.init(config)
   wasm.init(config)
 

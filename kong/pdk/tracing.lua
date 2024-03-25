@@ -539,6 +539,7 @@ local function new_tracer(name, options)
     end
   end
 
+  -- 这里将 self table 设置为 trace_mt 元表, 元表是一个引用类型, 在此函数后定义的方法也可以使用
   tracer_memo[name] = setmetatable(self, tracer_mt)
   return tracer_memo[name]
 end

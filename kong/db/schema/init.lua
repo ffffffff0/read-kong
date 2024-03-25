@@ -2090,6 +2090,8 @@ end
 -- @param values An instance of the entity, which is used
 -- only to determine which subschema to use.
 -- @return the iteration function
+-- 通过元组 __index 方法调用 Schema:each_field() 方法
+-- 遍历 schema 的 fields table
 function Schema:each_field(values)
   local i = 1
 
@@ -2099,10 +2101,13 @@ function Schema:each_field(values)
   end
 
   return function()
+    -- fields 是 table
     local item = self.fields[i]
     if not item then
       return nil
     end
+    -- 使用 next 函数来获取 item 表中的第一个键。
+    -- 由于 item 是一个表，next 将返回这个表中的第一个键。如果没有键，next 将返回 nil。
     local key = next(item)
     local field = resolve_field(self, key, item[key], subschema)
     i = i + 1
@@ -2352,15 +2357,17 @@ function Schema.new(definition, is_subschema)
     end
   end
 
+  -- 遍历 entity 中的 field 
   for key, field in self:each_field() do
     -- Also give access to fields by name
     self.fields[key] = field
     if field.type == "record" and field.fields then
       allow_record_fields_by_name(field)
     end
-
+    -- 有 type=foreign 的情况，entity 加载时会当作 subschema 加载进来。
     if field.type == "foreign" then
       local err
+      -- ? _cache 不存在怎么办⁉ ️ 
       field.schema, err = get_foreign_schema_for_field(field)
       if not field.schema then
         return nil, err

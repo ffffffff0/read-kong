@@ -422,6 +422,8 @@ function _M.init(config)
     tracer = pdk_tracer.new("instrument", {
       sampling_rate = sampling_rate,
     })
+
+    -- 设置kong.tracing的值 为 tracer
     tracer.set_global_tracer(tracer)
 
     -- global patch
