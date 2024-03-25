@@ -56,7 +56,7 @@ jobs:
 
     steps:
     - name: Checkout Kong source code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Lookup build cache
       id: cache-deps
@@ -155,7 +155,7 @@ jobs:
 
     steps:
     - name: Checkout Kong source code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Lookup build cache
       id: cache-deps
@@ -258,7 +258,7 @@ jobs:
 
     steps:
     - name: Checkout Kong source code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Lookup build cache
       id: cache-deps
@@ -319,7 +319,7 @@ jobs:
 
     steps:
     - name: Checkout Kong source code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Lookup build cache
       id: cache-deps
@@ -367,7 +367,7 @@ jobs:
 
     steps:
     - name: Checkout source code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install requirements
       run: |
