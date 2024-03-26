@@ -84,6 +84,20 @@ function DB.new(kong_config, strategy)
   end
 
   -- load strategy
+  -- db-less connector: {
+  --     database = "off",
+  --     timeout = 1,
+  --     close = ignore,
+  --     connect = ignore,
+  --     truncate_table = ignore,
+  --     truncate = ignore,
+  --     insert_lock = ignore,
+  --     remove_lock = ignore,
+  --     schema_reset = ignore,
+  --   }
+  -- strategies: {
+        -- schema.name: metaTable
+  -- }
 
   local connector, strategies, err = Strategies.new(kong_config, strategy,
                                                     schemas, errors)
