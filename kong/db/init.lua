@@ -30,7 +30,15 @@ DB.__index = function(self, k)
   return DB[k] or rawget(self, "daos")[k]
 end
 
-
+-- DB 结构体：  local self   = {
+--    daos       = daos,       -- each of those has the connector singleton
+--    strategies = strategies,
+--    connector  = connector,
+--    strategy   = strategy,
+--    errors     = errors,
+--    infos      = connector:infos(),
+--    kong_config = kong_config,
+--  }
 function DB.new(kong_config, strategy)
   if not kong_config then
     error("missing kong_config", 2)
@@ -54,6 +62,9 @@ function DB.new(kong_config, strategy)
     -- TODO: support schemas from plugins entities as well.
 
     for _, entity_name in ipairs(constants.CORE_ENTITIES) do
+      -- Schema：Schema 是一个描述数据结构的对象，它定义了特定类型的数据应该具有哪些字段，
+      -- 这些字段的类型是什么，以及它们是否是必需的。Schema 也可以定义关于这些字段的其他规则，
+      -- 比如它们的默认值，是否唯一，以及它们如何与其他字段相关联。
       local entity_schema = require("kong.db.schema.entities." .. entity_name)
 
       -- validate core entities schema via metaschema
@@ -62,6 +73,10 @@ function DB.new(kong_config, strategy)
         return nil, fmt("schema of entity '%s' is invalid: %s", entity_name,
                         tostring(errors:schema_violation(err_t)))
       end
+      -- Entity：Entity 是一个符合特定 Schema 的数据对象。
+      -- 它包含了 Schema 中定义的字段，并且每个字段的值都符合该字段在 Schema 中定义的规则。
+      -- 例如，如果你有一个 User Schema，那么一个 User Entity 可能就是一个包含 id, 
+      -- username, 和 email 字段的对象。
       local entity, err = Entity.new(entity_schema)
       if not entity then
         return nil, fmt("schema of entity '%s' is invalid: %s", entity_name,

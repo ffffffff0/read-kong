@@ -594,6 +594,7 @@ function Kong.init()
   wasm.init(config)
 
   local db = assert(DB.new(config))
+  -- 记录db query trace
   instrumentation.db_query(db.connector)
   assert(db:init_connector())
 
@@ -620,6 +621,7 @@ function Kong.init()
   assert(db:connect())
 
   kong.db = db
+  -- init dns client
   kong.dns = dns(config)
 
   if config.proxy_ssl_enabled or config.stream_ssl_enabled then
