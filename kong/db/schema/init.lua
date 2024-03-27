@@ -2179,6 +2179,7 @@ end
 local function get_foreign_schema_for_field(field)
   local ref = field.reference
 
+  -- _cache MetaSchema validate 时会初始化
   local foreign_schema = _cache[ref] and _cache[ref].schema
   if not foreign_schema then
     return nil, validation_errors.SCHEMA_BAD_REFERENCE:format(ref)
@@ -2367,7 +2368,7 @@ function Schema.new(definition, is_subschema)
     -- 有 type=foreign 的情况，entity 加载时会当作 subschema 加载进来。
     if field.type == "foreign" then
       local err
-      -- ? _cache 不存在怎么办⁉ ️ 
+      -- _cache 在之前 MetaSchema validate 时初始化
       field.schema, err = get_foreign_schema_for_field(field)
       if not field.schema then
         return nil, err
