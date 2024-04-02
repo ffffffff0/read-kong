@@ -668,6 +668,14 @@ local function propagate_cascade_delete_events(entries, options)
 end
 
 
+---
+--- generate_foreign_key_methods用于生成与外键相关的方法。
+--- 它遍历给定的schema中的每个字段，如果字段是外键类型，则生成相应的方法。
+--- 这些方法包括分页查询、按字段选择、按字段更新、按字段插入和按字段删除等操作。
+--- 这些方法用于与数据库交互，并根据给定的外键值执行相应的操作。
+---
+--- @param schema table The schema definition.
+---
 local function generate_foreign_key_methods(schema)
   local methods = {}
 

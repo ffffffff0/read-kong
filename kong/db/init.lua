@@ -26,7 +26,18 @@ local DEFAULT_LOCKS_TTL = 60 -- seconds
 
 
 local DB = {}
+-- The metatable index function for the DB table.
+-- 查询 DB 表中的键的值，如果找不到键，则从 "daos" 表中查询。
+-- @param self The DB table.
+-- @param k The key to retrieve the value for.
+-- @return The value of the key if found, otherwise nil.
+-- _index 是一个元方法，用于处理表中不存在的键。
 DB.__index = function(self, k)
+  -- rawget 返回 table 中的键值，不会触发元方法
+  -- 在 Lua 中，表（table）是一种类似于关联数组的数据结构，
+  -- 可以通过键来访问对应的值。通常情况下，当我们使用表的键来获取值时，
+  -- Lua 会首先检查表中是否存在对应的键，并根据表的元方法来执行相应的操作。
+  -- 然而，有时我们需要直接获取表中的值，而不触发任何元方法，这时就可以使用 rawget 函数。
   return DB[k] or rawget(self, "daos")[k]
 end
 
@@ -113,7 +124,7 @@ function DB.new(kong_config, strategy)
   -- strategies: {
         -- schema.name: metaTable
   -- }
-
+  -- strategies 代表了每个 schema 的策略，每个 schema 都有一个策略, 用来处理这个 schema 的增删改查.
   local connector, strategies, err = Strategies.new(kong_config, strategy,
                                                     schemas, errors)
   if err then
@@ -134,8 +145,10 @@ function DB.new(kong_config, strategy)
 
   do
     -- load DAOs
-
+    -- DAO 为 Data Access Object 的缩写，是一种数据访问模式，它是一个面向对象的数据访问接口.
     for _, schema in pairs(schemas) do
+      -- schema 为 Entity 对象
+      -- strategies 为 {schema.name: metaTable}
       local strategy = strategies[schema.name]
       if not strategy then
         return nil, fmt("no strategy found for schema '%s'", schema.name)
@@ -204,6 +217,7 @@ end
 
 
 function DB:connect()
+  -- 返回conector的connect, dbless 下为 ingore
   local ok, err = self.connector:connect()
   if not ok then
     return nil, prefix_err(self, err)

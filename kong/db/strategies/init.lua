@@ -78,7 +78,6 @@ function _M.new(kong_config, database, schemas, errors)
 
       setmetatable(strategy, mt)
     end
-
     strategies[schema.name] = strategy
   end
 

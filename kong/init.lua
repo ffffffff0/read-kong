@@ -596,6 +596,7 @@ function Kong.init()
   local db = assert(DB.new(config))
   -- 记录db query trace
   instrumentation.db_query(db.connector)
+  -- db:init_connector() 初始化数据库连接, 并且返回一个数据库连接对象.
   assert(db:init_connector())
 
   -- check state of migration only if there is an external database
@@ -618,6 +619,7 @@ function Kong.init()
     end
   end
 
+  -- 如果有数据则建立连接
   assert(db:connect())
 
   kong.db = db
